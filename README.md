@@ -8,11 +8,11 @@ Web application for Comet Energy student organization at UT Dallas.
    cd my-app
    npm install
    ```
-2. Install the additional project dependencies:
+2. Install the additional project dependencies listed in `requirements.txt`:
    ```
-   npm install prisma @prisma/client @prisma/adapter-libsql @libsql/client next-auth@beta react-hook-form
-   npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/core
+   npm install (Get-Content requirements.txt)
    ```
+   (macOS/Linux shells: `npm install $(cat requirements.txt)`)
 3. Ask about Turso database access.
 4. Create a Google OAuth client (Google Cloud Console → APIs & Services → Credentials) and note the client ID/secret.
 5. Copy the env template and fill in the values from steps 3-4:
