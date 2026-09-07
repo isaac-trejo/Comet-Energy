@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Connection URL lives in prisma.config.ts (Prisma 7 no longer supports `url` here).
+datasource db {
+  provider = "sqlite"
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String?
+  startsAt    DateTime
+  endsAt      DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// role is a plain string ("PRESIDENT" | "VICE_PRESIDENT" | "EXEC" | "TECHNICAL") since SQLite has no native enum type
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  title     String?
+  photoUrl  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

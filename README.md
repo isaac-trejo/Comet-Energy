@@ -13,14 +13,7 @@ Web application for Comet Energy student organization at UT Dallas.
    npm install prisma @prisma/client @prisma/adapter-libsql @libsql/client next-auth@beta react-hook-form
    npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/core
    ```
-3. Install the Turso CLI and create the database (requires a [Turso](https://turso.tech) account):
-   ```
-   npm install -g @tursodatabase/cli
-   turso auth login
-   turso db create comet-energy
-   turso db show comet-energy --url
-   turso db tokens create comet-energy
-   ```
+3. Ask about Turso database access.
 4. Create a Google OAuth client (Google Cloud Console → APIs & Services → Credentials) and note the client ID/secret.
 5. Copy the env template and fill in the values from steps 3-4:
    ```
