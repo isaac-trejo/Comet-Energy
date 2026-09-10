@@ -14,21 +14,20 @@ Web application for Comet Energy student organization at UT Dallas.
    ```
    (macOS/Linux shells: `npm install $(cat requirements.txt)`)
 3. Ask about Turso database access.
-4. Create a Google OAuth client (Google Cloud Console → APIs & Services → Credentials) and note the client ID/secret.
-5. Copy the env template and fill in the values from steps 3-4:
+4. Copy the env template and fill in the values from steps 3-4:
    ```
    cp .env.example .env.local
    ```
-6. Generate an Auth.js secret and paste it into `.env.local` as `AUTH_SECRET`:
+5. Generate an Auth.js secret and paste it into `.env.local` as `AUTH_SECRET`:
    ```
    npx auth secret
    ```
-7. Generate the Prisma client and run migrations against the Turso database:
+6. Generate the Prisma client and run migrations against the Turso database:
    ```
    npx prisma generate
    npx prisma migrate dev
    ```
-8. Start the dev server:
+7. Start the dev server:
    ```
    npm run dev
    ```
@@ -40,9 +39,6 @@ The React framework the app is built on, handling routing, server components, an
 
 ### Auth.js (NextAuth v5)
 Manages sign-in for the admin panel. Verifies the user's identity via Google OAuth, then a custom `signIn` callback checks the email against an allowlist so only the President and Vice President can reach `/admin`.
-
-### Google OAuth
-The identity provider used for admin sign-in. It only confirms who a user is, then Auth.js's allowlist check is what actually restricts access.
 
 ### Prisma
 The ORM layer between the app and the database. Defines the `Event` and `Member` schema, runs migrations, and provides type-safe queries so the app never writes raw SQL.
