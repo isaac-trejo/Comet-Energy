@@ -13,8 +13,8 @@ Web application for Comet Energy student organization at UT Dallas.
    npm install (Get-Content requirements.txt)
    ```
    (macOS/Linux shells: `npm install $(cat requirements.txt)`)
-3. Ask about Turso database access.
-4. Copy the env template and fill in the values from steps 3-4:
+3. Ask about Turso database access and copy the database URL and token into `.env.local`.
+4. Copy the env template:
    ```
    cp .env.example .env.local
    ```
@@ -22,12 +22,20 @@ Web application for Comet Energy student organization at UT Dallas.
    ```
    npx auth secret
    ```
-6. Generate the Prisma client and run migrations against the Turso database:
+6. Generate the Prisma client and create the migration locally:
    ```
    npx prisma generate
-   npx prisma migrate dev
+   npx prisma migrate dev --name <migration-name>
    ```
-7. Start the dev server:
+   Apply the generated SQL to Turso:
+   ```
+   node scripts/apply-migration.mjs prisma/migrations/<migration-folder>/migration.sql
+   ```
+7. Add the President and Vice President emails to `ADMIN_ALLOWED_EMAILS`, then create their password hashes. The script never stores plaintext passwords:
+   ```
+   node scripts/seed-admins.mjs
+   ```
+8. Start the dev server:
    ```
    npm run dev
    ```
@@ -38,10 +46,10 @@ Web application for Comet Energy student organization at UT Dallas.
 The React framework the app is built on, handling routing, server components, and Server Actions used by the admin panel to create/update/delete events and members.
 
 ### Auth.js (NextAuth v5)
-Manages sign-in for the admin panel. Verifies the user's identity via Google OAuth, then a custom `signIn` callback checks the email against an allowlist so only the President and Vice President can reach `/admin`.
+Manages sessions for the admin panel using the Credentials provider. It compares the submitted email and password against the seeded `AdminUser` records; passwords are stored only as bcrypt hashes.
 
 ### Prisma
-The ORM layer between the app and the database. Defines the `Event` and `Member` schema, runs migrations, and provides type-safe queries so the app never writes raw SQL.
+The ORM layer between the app and the database. Defines the `Event`, `Member`, and `AdminUser` schema, generates migrations, and provides type-safe queries so the app never writes raw SQL in application code.
 
 ### Turso (libSQL)
 The hosted serverless SQLite database that stores events and member data. Turso runs the libSQL engine and gives the app a connection URL and auth token; well suited to the small amount of data this project needs.
