@@ -16,6 +16,22 @@ if (emails.length === 0) {
   process.exit(1);
 }
 
+function readLine(prompt) {
+  return new Promise((resolve) => {
+    stdout.write(prompt);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+
+    const onData = (chunk) => {
+      stdin.off("data", onData);
+      stdin.pause();
+      resolve(chunk.toString().trim());
+    };
+
+    stdin.on("data", onData);
+  });
+}
+
 function readSecret(prompt) {
   return new Promise((resolve, reject) => {
     stdout.write(prompt);
@@ -61,25 +77,30 @@ const client = createClient({
 });
 
 try {
-  for (const email of emails) {
-    const password = await readSecret(`Password for ${email}: `);
-    if (password.length < 12) {
-      throw new Error("Passwords must be at least 12 characters long.");
-    }
+  const rawEmail = await readLine(`Email (${emails.join(", ")}): `);
+  const email = rawEmail.trim().toLowerCase();
 
-    const passwordHash = await bcrypt.hash(password, 12);
-    await client.execute({
-      sql: `
-        INSERT INTO "AdminUser" ("id", "email", "passwordHash", "createdAt", "updatedAt")
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        ON CONFLICT("email") DO UPDATE SET
-          "passwordHash" = excluded."passwordHash",
-          "updatedAt" = CURRENT_TIMESTAMP
-      `,
-      args: [randomUUID(), email, passwordHash],
-    });
-    console.log(`Saved hashed credentials for ${email}.`);
+  if (!emails.includes(email)) {
+    throw new Error(`${email} is not in ADMIN_ALLOWED_EMAILS.`);
   }
+
+  const password = await readSecret(`Password for ${email}: `);
+  if (password.length < 12) {
+    throw new Error("Passwords must be at least 12 characters long.");
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await client.execute({
+    sql: `
+      INSERT INTO "AdminUser" ("id", "email", "passwordHash", "createdAt", "updatedAt")
+      VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      ON CONFLICT("email") DO UPDATE SET
+        "passwordHash" = excluded."passwordHash",
+        "updatedAt" = CURRENT_TIMESTAMP
+    `,
+    args: [randomUUID(), email, passwordHash],
+  });
+  console.log(`Saved hashed credentials for ${email}.`);
 } finally {
   client.close();
 }
