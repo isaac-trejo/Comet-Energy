@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 // Cache the client on `globalThis` in dev so hot-reload doesn't open a new connection per edit.
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createPrismaClient() {
-  const adapter = new PrismaLibSQL({
+  const adapter = new PrismaLibSql({
     url: process.env.DATABASE_URL!,
     authToken: process.env.TURSO_AUTH_TOKEN,
   });
