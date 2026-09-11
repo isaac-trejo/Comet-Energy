@@ -16,7 +16,8 @@ if (emails.length === 0) {
   process.exit(1);
 }
 
-function readLine(prompt) {
+// Used to read email from user in CLI
+function readLine(prompt) { 
   return new Promise((resolve) => {
     stdout.write(prompt);
     stdin.resume();
@@ -32,6 +33,7 @@ function readLine(prompt) {
   });
 }
 
+// Used to read pw from user in CLI
 function readSecret(prompt) {
   return new Promise((resolve, reject) => {
     stdout.write(prompt);
@@ -71,6 +73,9 @@ function readSecret(prompt) {
   });
 }
 
+
+/* Reads input in command line for admin email & pw to updates DB
+*/
 const client = createClient({
   url: process.env.DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
