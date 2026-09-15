@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -51,6 +53,8 @@ export async function createEvent(
   } catch {
     return { success: false, message: "Something went wrong while saving the event." };
   }
+
+  revalidatePath("/admin");
 
   return { success: true, message: "Event added successfully." };
 }

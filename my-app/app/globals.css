@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* FullCalendar's default theme uses light gray text/borders; darken for readability on white cards */
+.fc {
+  --fc-border-color: #000000;
+  --fc-neutral-text-color: #000000;
+  --fc-page-bg-color: #ffffff;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number,
+.fc .fc-toolbar-title {
+  color: #000000;
+}
+
