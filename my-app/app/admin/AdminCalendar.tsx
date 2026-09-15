@@ -2,6 +2,7 @@
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 export type CalendarEvent = {
   id: string;
@@ -14,13 +15,25 @@ export type CalendarEvent = {
   };
 };
 
-export function AdminCalendar({ events }: { events: CalendarEvent[] }) {
+export function AdminCalendar({
+  events,
+  onDateClick,
+  selectedDate,
+}: {
+  events: CalendarEvent[];
+  onDateClick: (dateStr: string) => void;
+  selectedDate?: string;
+}) {
   return (
     <FullCalendar
-      plugins={[dayGridPlugin]}
+      plugins={[dayGridPlugin, interactionPlugin]}
       initialView="dayGridMonth"
       events={events}
       height="auto"
+      dateClick={(info) => onDateClick(info.dateStr)}
+      dayCellClassNames={(arg) =>
+        arg.date.toISOString().slice(0, 10) === selectedDate ? ["fc-day-selected"] : []
+      }
     />
   );
 }

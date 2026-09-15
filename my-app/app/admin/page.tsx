@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { EventForm } from "./EventForm";
-import { AdminCalendar, type CalendarEvent } from "./AdminCalendar";
+import { AdminCalendarSection } from "./AdminCalendarSection";
+import type { CalendarEvent } from "./AdminCalendar";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -29,16 +30,13 @@ export default async function AdminPage() {
       <h1>Admin dashboard</h1>
       <p>Signed in as {session.user.email}.</p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start mt-6">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Add event</h2>
-          <EventForm />
-        </div>
+      <div className="mt-6">
+        <AdminCalendarSection events={calendarEvents} />
+      </div>
 
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Upcoming events</h2>
-          <AdminCalendar events={calendarEvents} />
-        </div>
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Add event</h2>
+        <EventForm />
       </div>
     </main>
   );

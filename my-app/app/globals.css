@@ -38,3 +38,7 @@ body {
   color: #000000;
 }
 
+.fc .fc-day-selected {
+  background-color: #dbeafe;
+}
+
