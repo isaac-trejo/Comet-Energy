@@ -57,17 +57,17 @@ export function EventForm() {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="description" className={labelClasses}>
-            Description
+          <label htmlFor="location" className={labelClasses}>
+            Location
           </label>
-          <textarea id="description" name="description" required disabled={isPending} className={inputClasses} />
+          <input id="location" name="location" type="text" required disabled={isPending} className={inputClasses} />
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="location" className={labelClasses}>
-            Location (optional)
+          <label htmlFor="description" className={labelClasses}>
+            Description (optional)
           </label>
-          <input id="location" name="location" type="text" disabled={isPending} className={inputClasses} />
+          <textarea id="description" name="description" disabled={isPending} className={inputClasses} />
         </div>
 
         <button

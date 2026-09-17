@@ -25,8 +25,8 @@ export async function createEvent(
   const startsAt = String(formData.get("startsAt") ?? "");
   const endsAt = String(formData.get("endsAt") ?? "");
 
-  if (!title || !description || !startsAt || !endsAt) {
-    return { success: false, message: "Title, description, start, and end are required." };
+  if (!title || !location || !startsAt || !endsAt) {
+    return { success: false, message: "Title, location, start, and end are required." };
   }
 
   const startsAtDate = new Date(startsAt);
@@ -44,8 +44,8 @@ export async function createEvent(
     await prisma.event.create({
       data: {
         title,
-        description,
-        location: location || null,
+        description: description || null,
+        location,
         startsAt: startsAtDate,
         endsAt: endsAtDate,
       },

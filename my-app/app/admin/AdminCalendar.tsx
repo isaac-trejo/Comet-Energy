@@ -10,8 +10,8 @@ export type CalendarEvent = {
   start: string;
   end: string;
   extendedProps?: {
-    description?: string;
-    location?: string | null;
+    description?: string | null;
+    location: string;
   };
 };
 

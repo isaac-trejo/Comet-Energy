@@ -36,7 +36,7 @@ export function DayEventsCard({ date, events }: { date: string; events: Calendar
                 <summary className="flex items-center justify-between cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{event.title}</p>
-                    <p className="text-sm text-gray-600">{formatTimeRange(event)}</p>
+                    <p className="text-sm text-gray-600">{formatTimeRange(event)} • {event.extendedProps?.location}</p>
                   </div>
                   <span className="text-gray-400 transition-transform group-open:rotate-90">▶</span>
                 </summary>
@@ -44,9 +44,6 @@ export function DayEventsCard({ date, events }: { date: string; events: Calendar
                   {event.extendedProps?.description || "No description provided."}
                 </p>
               </details>
-              {event.extendedProps?.location && (
-                <p className="text-sm text-gray-500 mt-1">{event.extendedProps.location}</p>
-              )}
             </li>
           ))}
         </ul>
