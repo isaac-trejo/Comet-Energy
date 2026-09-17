@@ -15,7 +15,9 @@ function toLocalDateString(date: Date) {
 export function AdminCalendarSection({ events }: { events: CalendarEvent[] }) {
   const [selectedDate, setSelectedDate] = useState(() => toLocalDateString(new Date()));
 
-  const dayEvents = events.filter((event) => event.start.slice(0, 10) === selectedDate);
+  const dayEvents = events.filter(
+    (event) => toLocalDateString(new Date(event.start)) === selectedDate
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
