@@ -30,6 +30,8 @@ export function AdminCalendar({
       initialView="dayGridMonth"
       events={events}
       height="auto"
+      eventDisplay="block"
+      eventContent={(arg) => arg.event.title}
       dateClick={(info) => onDateClick(info.dateStr)}
       dayCellClassNames={(arg) =>
         arg.date.toISOString().slice(0, 10) === selectedDate ? ["fc-day-selected"] : []

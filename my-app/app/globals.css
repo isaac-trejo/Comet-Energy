@@ -42,3 +42,19 @@ body {
   background-color: #dbeafe;
 }
 
+.fc .fc-event {
+  background-color: #114634;
+  border-color: #114634;
+  color: #ffffff;
+}
+
+.fc .fc-event:hover {
+  background-color: #1c6b50;
+  border-color: #1c6b50;
+}
+
+.fc .fc-event-title,
+.fc .fc-event-time {
+  color: #ffffff;
+}
+
