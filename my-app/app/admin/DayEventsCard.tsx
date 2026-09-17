@@ -32,10 +32,20 @@ export function DayEventsCard({ date, events }: { date: string; events: Calendar
         <ul className="flex flex-col gap-3 mt-4">
           {events.map((event) => (
             <li key={event.id} className="border-b border-gray-100 pb-3 last:border-b-0 last:pb-0">
-              <p className="text-sm font-medium text-gray-900">{event.title}</p>
-              <p className="text-sm text-gray-600">{formatTimeRange(event)}</p>
+              <details className="group">
+                <summary className="flex items-center justify-between cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{event.title}</p>
+                    <p className="text-sm text-gray-600">{formatTimeRange(event)}</p>
+                  </div>
+                  <span className="text-gray-400 transition-transform group-open:rotate-90">▶</span>
+                </summary>
+                <p className="text-sm text-gray-600 mt-2">
+                  {event.extendedProps?.description || "No description provided."}
+                </p>
+              </details>
               {event.extendedProps?.location && (
-                <p className="text-sm text-gray-500">{event.extendedProps.location}</p>
+                <p className="text-sm text-gray-500 mt-1">{event.extendedProps.location}</p>
               )}
             </li>
           ))}
