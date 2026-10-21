@@ -12,7 +12,12 @@ function toLocalDateString(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-export function AdminCalendarSection({ events }: { events: CalendarEvent[] }) {
+type AdminCalendarSectionProps = {
+  events: CalendarEvent[];
+  onEditEvent?: (event: CalendarEvent) => void;
+};
+
+export function AdminCalendarSection({ events, onEditEvent }: AdminCalendarSectionProps) {
   const [selectedDate, setSelectedDate] = useState(() => toLocalDateString(new Date()));
 
   const dayEvents = events.filter(
@@ -21,7 +26,7 @@ export function AdminCalendarSection({ events }: { events: CalendarEvent[] }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-      <DayEventsCard date={selectedDate} events={dayEvents} />
+      <DayEventsCard date={selectedDate} events={dayEvents} onEditEvent={onEditEvent} />
       <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <AdminCalendar events={events} onDateClick={setSelectedDate} selectedDate={selectedDate} />
       </div>

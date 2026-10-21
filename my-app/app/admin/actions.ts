@@ -58,3 +58,87 @@ export async function createEvent(
 
   return { success: true, message: "Event added successfully." };
 }
+
+export type UpdateEventState = {
+  success: boolean;
+  message: string;
+};
+
+export async function updateEvent(
+  _prevState: UpdateEventState,
+  formData: FormData
+): Promise<UpdateEventState> {
+  const session = await auth();
+  if (!session?.user?.email) {
+    return { success: false, message: "You must be signed in to update an event." };
+  }
+
+  const eventId = String(formData.get("eventId") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const location = String(formData.get("location") ?? "").trim();
+  const startsAt = String(formData.get("startsAt") ?? "");
+  const endsAt = String(formData.get("endsAt") ?? "");
+
+  if (!eventId || !title || !location || !startsAt || !endsAt) {
+    return { success: false, message: "Event ID, title, location, start, and end are required." };
+  }
+
+  const startsAtDate = new Date(startsAt);
+  const endsAtDate = new Date(endsAt);
+
+  if (Number.isNaN(startsAtDate.getTime()) || Number.isNaN(endsAtDate.getTime())) {
+    return { success: false, message: "Start and end must be valid dates." };
+  }
+
+  if (endsAtDate < startsAtDate) {
+    return { success: false, message: "End time must be after the start time." };
+  }
+
+  try {
+    await prisma.event.update({
+      where: { id: eventId },
+      data: {
+        title,
+        description: description || null,
+        location,
+        startsAt: startsAtDate,
+        endsAt: endsAtDate,
+      },
+    });
+  } catch {
+    return { success: false, message: "Something went wrong while updating the event." };
+  }
+
+  revalidatePath("/admin");
+
+  return { success: true, message: "Event updated successfully." };
+}
+
+export type DeleteEventState = {
+  success: boolean;
+  message: string;
+};
+
+export async function deleteEvent(eventId: string): Promise<DeleteEventState> {
+  const session = await auth();
+  if (!session?.user?.email) {
+    return { success: false, message: "You must be signed in to delete an event." };
+  }
+
+  if (!eventId) {
+    return { success: false, message: "Event ID is required." };
+  }
+
+  try {
+    await prisma.event.delete({
+      where: { id: eventId },
+    });
+  } catch {
+    return { success: false, message: "Something went wrong while deleting the event." };
+  }
+
+  revalidatePath("/admin");
+
+  return { success: true, message: "Event deleted successfully." };
+}

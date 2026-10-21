@@ -1,13 +1,40 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef, useEffect } from "react";
 
-import { createEvent, type CreateEventState } from "./actions";
+import { createEvent, updateEvent, type CreateEventState, type UpdateEventState } from "./actions";
+import type { CalendarEvent } from "./AdminCalendar";
 
-const initialState: CreateEventState = { success: false, message: "" };
+type EventFormProps = {
+  initialEvent?: CalendarEvent | null;
+  onSuccess?: () => void;
+};
 
-export function EventForm() {
-  const [state, formAction, isPending] = useActionState(createEvent, initialState);
+export function EventForm({ initialEvent, onSuccess }: EventFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const isEditing = !!initialEvent;
+  const action = isEditing ? updateEvent : createEvent;
+  const initialState = { success: false, message: "" };
+  const [state, formAction, isPending] = useActionState(action, initialState);
+
+  useEffect(() => {
+    if (state.success && !isEditing) {
+      formRef.current?.reset();
+    }
+    if (state.success && isEditing && onSuccess) {
+      onSuccess();
+    }
+  }, [state.success, isEditing, onSuccess]);
+
+  const formatDateTimeLocal = (isoString: string) => {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
 
   const inputClasses =
     "mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -16,14 +43,27 @@ export function EventForm() {
   return (
     <div className="max-w-2xl mx-auto">
       <form
+        ref={formRef}
         action={formAction}
         className="flex flex-col gap-4 bg-white rounded-lg shadow-md border border-gray-200 p-6"
       >
+        {isEditing && (
+          <input type="hidden" name="eventId" value={initialEvent?.id} />
+        )}
+
         <div className="flex flex-col">
           <label htmlFor="title" className={labelClasses}>
             Title
           </label>
-          <input id="title" name="title" type="text" required disabled={isPending} className={inputClasses} />
+          <input
+            id="title"
+            name="title"
+            type="text"
+            required
+            disabled={isPending}
+            defaultValue={initialEvent?.title ?? ""}
+            className={inputClasses}
+          />
         </div>
 
         <div className="flex gap-4">
@@ -37,6 +77,7 @@ export function EventForm() {
               type="datetime-local"
               required
               disabled={isPending}
+              defaultValue={initialEvent ? formatDateTimeLocal(initialEvent.start) : ""}
               className={inputClasses}
             />
           </div>
@@ -51,6 +92,7 @@ export function EventForm() {
               type="datetime-local"
               required
               disabled={isPending}
+              defaultValue={initialEvent ? formatDateTimeLocal(initialEvent.end) : ""}
               className={inputClasses}
             />
           </div>
@@ -60,14 +102,28 @@ export function EventForm() {
           <label htmlFor="location" className={labelClasses}>
             Location
           </label>
-          <input id="location" name="location" type="text" required disabled={isPending} className={inputClasses} />
+          <input
+            id="location"
+            name="location"
+            type="text"
+            required
+            disabled={isPending}
+            defaultValue={initialEvent?.extendedProps?.location ?? ""}
+            className={inputClasses}
+          />
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="description" className={labelClasses}>
             Description (optional)
           </label>
-          <textarea id="description" name="description" disabled={isPending} className={inputClasses} />
+          <textarea
+            id="description"
+            name="description"
+            disabled={isPending}
+            defaultValue={initialEvent?.extendedProps?.description ?? ""}
+            className={inputClasses}
+          />
         </div>
 
         <button
@@ -75,7 +131,7 @@ export function EventForm() {
           disabled={isPending}
           className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isPending ? "Saving..." : "Add event"}
+          {isPending ? "Saving..." : isEditing ? "Update event" : "Add event"}
         </button>
 
         {state.message && (

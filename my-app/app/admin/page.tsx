@@ -2,8 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { EventForm } from "./EventForm";
-import { AdminCalendarSection } from "./AdminCalendarSection";
+import { AdminPageContent } from "./AdminPageContent";
 import type { CalendarEvent } from "./AdminCalendar";
 
 export default async function AdminPage() {
@@ -26,18 +25,6 @@ export default async function AdminPage() {
   }));
 
   return (
-    <main className="p-6">
-      <h1>Admin dashboard</h1>
-      <p>Signed in as {session.user.email}.</p>
-
-      <div className="mt-6">
-        <AdminCalendarSection events={calendarEvents} />
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Add event</h2>
-        <EventForm />
-      </div>
-    </main>
+    <AdminPageContent initialEvents={calendarEvents} userEmail={session.user.email} />
   );
 }
