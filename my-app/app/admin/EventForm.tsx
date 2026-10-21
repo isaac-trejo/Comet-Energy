@@ -45,8 +45,12 @@ export function EventForm({ initialEvent, onSuccess }: EventFormProps) {
       <form
         ref={formRef}
         action={formAction}
-        className="flex flex-col gap-4 bg-white rounded-lg shadow-md border border-gray-200 p-6"
+        className="flex flex-col gap-4 bg-white rounded-lg shadow border border-gray-100 p-6"
       >
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          {isEditing ? "Edit event" : "Add event"}
+        </h2>
+
         {isEditing && (
           <input type="hidden" name="eventId" value={initialEvent?.id} />
         )}

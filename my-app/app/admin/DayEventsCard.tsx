@@ -45,7 +45,7 @@ export function DayEventsCard({ date, events, onEditEvent }: DayEventsCardProps)
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+    <div className="bg-white rounded-lg shadow border border-gray-100 p-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-1">{formatHeading(date)}</h2>
 
       {events.length === 0 ? (
@@ -82,7 +82,7 @@ export function DayEventsCard({ date, events, onEditEvent }: DayEventsCardProps)
 
                 {deleteConfirmId === event.id && (
                   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4">
+                    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-4 border border-gray-100">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Event</h3>
                       <p className="text-sm text-gray-600 mb-4">
                         Are you sure you want to delete "{event.title}"? This action cannot be undone.

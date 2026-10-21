@@ -30,20 +30,17 @@ export function AdminPageContent({ initialEvents, userEmail }: AdminPageContentP
   };
 
   return (
-    <main className="p-6">
-      <h1>Admin dashboard</h1>
-      <p>Signed in as {userEmail}.</p>
+    <>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">Events</h1>
+      <p className="text-gray-600 mb-6">Signed in as {userEmail}.</p>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <AdminCalendarSection events={initialEvents} onEditEvent={handleEditEvent} />
       </div>
 
-      <div className="mt-6" ref={formRef}>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          {selectedEvent ? "Edit event" : "Add event"}
-        </h2>
+      <div className="mt-8" ref={formRef}>
         <EventForm initialEvent={selectedEvent} onSuccess={handleFormSuccess} />
       </div>
-    </main>
+    </>
   );
 }
